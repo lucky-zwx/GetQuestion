@@ -35,7 +35,7 @@ if __name__ == '__main__':
                'jiaozhichu_brower': 'p'  # 不知道干啥的
                }
 
-    loginF = {'id': '201710143001', 'password': 'abk6745741', 'jurl': ''}
+    loginF = {'id': '201710143001', 'password': '*******', 'jurl': ''}  # 这里的password根据实际情况来定
 
     login = requests.post(url='http://192.168.252.29/ksxt/login/ksonline/LoginAction.do', cookies=cookies, data=loginF)
 
