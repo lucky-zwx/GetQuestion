@@ -15,14 +15,14 @@ if __name__ == '__main__':
     headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-        'Host': '192.168.252.29',
+        'Host': 'ksxt.sdvcst.edu.cn:9110',
         'Cache - Control': 'max - age = 0',
         'Accept-Encoding': 'gzip, deflate',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
                       'Chrome/71.0.3578.98 Safari/537.36 '
     }
 
-    mmp = requests.get(url='http://192.168.252.29/ksxt/ksonline/index.jsp')  # 获得jsessionio
+    mmp = requests.get(url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/index.jsp')  # 获得jsessionio
 
     JSESSIONID = str(mmp.cookies).split(' ')[1].split('JSESSIONID=')[1]
 
@@ -39,9 +39,9 @@ if __name__ == '__main__':
 
     loginF = {'id': username, 'password': password, 'jurl': ''}
 
-    login = requests.post(url='http://192.168.252.29/ksxt/login/ksonline/LoginAction.do', cookies=cookies, data=loginF)
+    login = requests.post(url='http://ksxt.sdvcst.edu.cn:9110/ksxt/login/ksonline/LoginAction.do', cookies=cookies, data=loginF)
 
-    list_q = requests.post(url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=examListMain&type=1',
+    list_q = requests.post(url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=examListMain&type=1',
                            cookies=cookies)  # 获得考试的id
 
     list_Bea = BeautifulSoup(list_q.text, 'html.parser')
@@ -50,7 +50,7 @@ if __name__ == '__main__':
             ty = str(mesa.get('onclick'))
             Zjk.append(ty.split("_h5('")[1].split("'")[0])
     # print(Zjk)
-    for iii in range(0, 10):
+    for iii in range(0, 100):
         for examid in Zjk:
             dati = []
             daan = {}
@@ -58,11 +58,11 @@ if __name__ == '__main__':
             titi = {}
             filena = open(examid + '.txt', 'a+', encoding='utf-8')
             body = {'examid': examid}
-            first = requests.post(url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=initKsKs', data=body,
+            first = requests.post(url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=initKsKs', data=body,
                                   cookies=cookies)  # 进行试卷初始化
             data_getStudentid = {'op': 'null', 'examid': examid, 'examtype': '3', 'studentid': ''}
             r = requests.post(
-                url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=kaochang&type=confirm&examid=' + examid + '&examtype=3&studentid=&lx=3',
+                url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=kaochang&type=confirm&examid=' + examid + '&examtype=3&studentid=&lx=3',
                 cookies=cookies, data=data_getStudentid, timeout=500)
             r.encoding = 'UTF-8'
             soup = BeautifulSoup(r.text, 'html.parser')
@@ -73,11 +73,11 @@ if __name__ == '__main__':
             data_Account = {'type': 'confirm', 'studentid': studentid, 'kssj': '1', 'kaochangid': kaochangid,
                             'examtype': '3',
                             'examid': examid}
-            account = requests.post(url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=account',
+            account = requests.post(url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=account',
                                     data=data_Account, cookies=cookies, timeout=500)
             data_saveAccount = {'zb': '', 'type': '1', 'studentid': studentid, 'kaochangid': kaochangid, 'examtype': '3',
                                 'examid': examid}
-            saveAccount = requests.post(url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=saveSignAccount',
+            saveAccount = requests.post(url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=saveSignAccount',
                                         data=data_saveAccount, cookies=cookies, timeout=500)
             data_ans1 = {'type': '1', 'type': '1', 'studentid': studentid, 'studentid': studentid, 'sort': 'null', 'p': 'p',
                          'examtype': '3', 'examid': examid, 'examid': examid}
@@ -85,7 +85,7 @@ if __name__ == '__main__':
             data_getlist = {'examid': examid, 'examtype': 'null', 'studentid': studentid, 'sort': '1'}
 
             quelist = requests.post(
-                url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=getQuestionList&type=1',
+                url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=getQuestionList&type=1',
                 data=data_getlist, cookies=cookies)
             # print(quelist.text)
             bealist = BeautifulSoup(quelist.text, 'html.parser')
@@ -97,7 +97,7 @@ if __name__ == '__main__':
                             sort = sssort.get('onclick').split("click_ti('")[1].split("'")[0]
                             if sort == '1':
                                 ans1 = requests.post(
-                                    url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=selectQuestiontimu&anscount=1',
+                                    url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=selectQuestiontimu&anscount=1',
                                     data=data_ans1, cookies=cookies, timeout=500)
                                 qu1 = BeautifulSoup(ans1.text, 'html.parser')
                                 ques = qu1.find('div', id='timu_text')
@@ -127,7 +127,7 @@ if __name__ == '__main__':
                                                     'studentupfile': '', 'questionid': '23771', 'val': 'null'
                                                     }
                                 question = requests.post(
-                                    url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=selectQuestiontimu',
+                                    url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=selectQuestiontimu',
                                     headers=headers, data=data_getrequests, cookies=cookies, timeout=500)
                                 qu = BeautifulSoup(question.text, 'html.parser')
                                 ques = qu.find('div', id='timu_text')
@@ -163,7 +163,7 @@ if __name__ == '__main__':
                                                 'note': 'AAA'
                                                 }
                             question = requests.post(
-                                url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=selectQuestiontimu',
+                                url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=selectQuestiontimu',
                                 headers=headers, data=data_getrequests, cookies=cookies, timeout=500)
                             qu = BeautifulSoup(question.text, 'html.parser')
                             ques = qu.find('div', id='timu_text')
@@ -189,7 +189,7 @@ if __name__ == '__main__':
                                                 'choosexx': '1',
                                                 'anscount': '0'}
                             question = requests.post(
-                                url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=selectQuestiontimu',
+                                url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=selectQuestiontimu',
                                 headers=headers, data=data_getrequests, cookies=cookies, timeout=500)
                             qu = BeautifulSoup(question.text, 'html.parser')
                             ques = qu.find('div', id='timu_text')
@@ -199,7 +199,7 @@ if __name__ == '__main__':
                                 # print("选项: %s" % titi[str(int(sort) + 1)])
 
             data_getAnswer = {'type': '1', 'studentid': studentid, 'sort': '6', 'kh': 'null', 'examid': examid}
-            answer = requests.post(url='http://192.168.252.29/ksxt/ksonline/KsOnlineAction.do?method=commit',
+            answer = requests.post(url='http://ksxt.sdvcst.edu.cn:9110/ksxt/ksonline/KsOnlineAction.do?method=commit',
                                    cookies=cookies,
                                    data=data_getAnswer, timeout=500)
             ans_soup = BeautifulSoup(answer.text, 'html.parser')
